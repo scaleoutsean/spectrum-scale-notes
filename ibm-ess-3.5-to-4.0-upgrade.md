@@ -160,7 +160,7 @@ mmchrecoverygroup rg_gssio1 --servers gssio2,gssio1
 
 This will take a minute. Repeat it for all RG's where `$CURRENT_IO_SERVER` is Primary.
 
-Later, when we move on to `gssio2`, we'll do the opposite (demote `gssio2` from Primary to Secondary in all RG's). And when we are done with this section, we need to revert the role back to the default we had when we first executed `mmlsrecoverygroup` above. Again, we should do not simply copy and paste without paying attention to RG and server names. Even in that case nothing catastrophic should happen, but longer I/O server failovers with more performance impact could be possible.
+Later, when we move on to `gssio2`, we'll do the opposite (demote `gssio2` from Primary to Secondary in all RG's). And when we are done with this section, we need to revert the role back to the default we had when we first executed `mmlsrecoverygroup` above. Again, we should not simply copy and paste without paying attention to RG and server names. Even in that case nothing catastrophic should happen, but longer I/O server failovers with more performance impact could be possible.
 
 Starting with Step 3 in this section, the procedure is almost identical to `ems1`, but remember to use the correct I/O server name!
 
