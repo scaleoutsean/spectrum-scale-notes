@@ -81,6 +81,7 @@ NOTES:
 * The manual contains a mistake here - it suggests that the `mmlsfirmware` command should be executed against `gss_ppc64`, which is wrong.
 `gss_ppc64` is a node class (see output of `mmlsnodeclass`) and denotes all ESS I/O nodes (in our case, `gssio1` and `gssio2`, while `ems1` does not belong to this class).
 * When you move on to repeat this upgrade procedure on the I/O nodes, you could use `gss_ppc64` to refer to the both of them, or individual host names (which is going to run slightly faster and may be better since you will be upgrading them in a rolling fashion anyway).
+* If the file /usr/lpp/mmfs/updates/gnrFirmware.tar.untarred exist from a previous upgrade, the gss_ipraid update might fail with message about "FW rpm not found, trying to untar Firmware.tar FW rpm not found. Exiting...". If that happens, remove the /usr/lpp/mmfs/updates/gnrFirmware.tar.untarred and re-run the updatenode command.
 
 Assuming everything goes well, we can reboot `ems1`, enable GPFS on it and start service: 
 
