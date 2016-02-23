@@ -239,4 +239,4 @@ mmchconfig release=LATEST
 mmchfs fs1 -V full
 ```
 
-Details on this can be found [on this page](https://www-01.ibm.com/support/knowledgecenter/STXKQY_4.2.0/com.ibm.spectrum.scale.v4r2.ins.doc/bl1ins_migratl.htm?lang=en)
+Additional details about these commands can be found [on this page](https://www-01.ibm.com/support/knowledgecenter/STXKQY_4.2.0/com.ibm.spectrum.scale.v4r2.ins.doc/bl1ins_migratl.htm?lang=en) and elsewhere in Spectrum Scale 4.2 documentation.
