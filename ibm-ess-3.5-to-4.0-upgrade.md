@@ -104,10 +104,10 @@ To account for that, we'll repeat the same procedure as for the management node,
 
 We won't repeat all 11 steps here - it should be enough to clarify the concept:
 
-* An I/O node pair likely contains a filesystem manager(s) and each of the I/O nodes is the preferred "owner" of "left" or "right" grup of disks in JBOD enclosures.
+* An I/O node pair likely contains a filesystem manager(s) and each of the I/O nodes is the preferred "owner" of "left" or "right" Recovery Group of disks in JBOD enclosures.
 * When we upgrade one of the two nodes, we need to preemptively unassign any roles to it, to make the upgrade smoother in terms of failover and failback.
 
-NOTE: The Guide mentions `CurrentServer`, which is the I/O server we're currently working on. This is to prevent copy-and-paste that may be executed against the wrong server.
+NOTE: The Guide mentions `CurrentServer` (and variants thereof), which is the server we're currently working on. This is to prevent accidental copy-and-paste that could be executed against the wrong server, so we need to pay attention to the hostnames.
 
 All right, so we'll start with `gssio1` and to accmmodate for the first the difference (filesystem manager) vs. `ems1`, we need to remove its manager role during this stage.
 
@@ -125,14 +125,13 @@ fs1              192.168.45.22 (gssio1)
 fs2              192.168.45.22 (gssio2)
 ```
 
-For all such filesystems, reassign the role to the other node (pay attention to node and filesystem names!).
+For all such filesystems where `$CURRENT_IO_SERVER` is the manager, reassign the role to the other node (pay attention to node and filesystem names!).
 
 ```
 mmchmgr fs1 gssio2
 ```
 
-After this is done, we need to account for the second difference compared to `ems1`, the IO nodes' ownership of Recovery Groups.
-
+After this is done, we need to account for the second difference compared to `ems1`, namely the I/O nodes' ownership of Recovery Groups.
 
 ```
 mmlsrecoverygroup
@@ -151,23 +150,24 @@ We expect to see something like this:
  rg_gssio2                     3       9  gssio2.gpfs.net,gssio1.gpfs.net
 ```
 
-Again, we need to demote the "current node" (now `$CURRENT_IO_NODE` is `gssio1`) to Secondary role, so let's revert the server order for the group owned by `gssio1`:
+If you deal with a large cluster you may want to keep this output for later when you need to revert these temporary changes.
+
+We need to demote the "current node" (the first time we run this `$CURRENT_IO_SERVER` is `gssio1`) to Secondary role, so let's revert the preferred server order for the group owned by `gssio1`:
 
 ```
 mmchrecoverygroup rg_gssio1 --servers gssio2,gssio1
 ```
 
-This will take a minute.
+This will take a minute. Repeat it for all RG's where `$CURRENT_IO_SERVER` is Primary.
 
-Later, when we move on to `gssio2`, we'll do the opposite (remove `gssio2` from Primary in all filesystems). And when we are done with this section, we need to revert the role back to the default we had when we first executed `mmlsrecoverygroup` above.
-Again, we should do not simply copy and paste without paying attention to RG and server names. Even in that case nothing catastrophic should happen, but longer I/O server failovers with more performance impact could be possible.
+Later, when we move on to `gssio2`, we'll do the opposite (demote `gssio2` from Primary to Secondary in all RG's). And when we are done with this section, we need to revert the role back to the default we had when we first executed `mmlsrecoverygroup` above. Again, we should do not simply copy and paste without paying attention to RG and server names. Even in that case nothing catastrophic should happen, but longer I/O server failovers with more performance impact could be possible.
 
 Starting with Step 3 in this section, the procedure is almost identical to `ems1`, but remember to use the correct I/O server name!
 
 Follow Steps 3 to 7 in this section while paying attention to our suggestions and workarounds outlined above for `ems1`.
 For example, we suggest to not only shutdown, but also disable GPFS service on the nodes, etc.
 
-This can be beneficial in Step 8 (`mmchfirmware --type host-adapter`), for example, because Step 8 **won't work** if GPFS service is running on the node, and it will be running if you didn't disable it and rebooted as instructed in the official guide's Step 7. (Normally GPFS service is set to autostart (`autoload=yes`).)
+This can be beneficial in Step 8 (`mmchfirmware --type host-adapter`), for example, because Step 8 **won't work** if GPFS service is running on the node, and it will be running if you didn't disable it and rebooted as instructed in the official guide's Step 7. (Normally GPFS service is set to autostart (`autoload=yes`), so there may be exceptions.)
 
 NOTE: Unlike with `ems1`, for I/O nodes only `gssupg400.sh -s $CURRENT_IO_SERVER` needs to be executed in this section.
 
@@ -182,7 +182,7 @@ Then repeat this section related to I/O nodes one more time, but with `gssio2`, 
 * The both I/O servers are set to `autoload=yes` (if you want GPFS to auto-start)
 * GPFS service is running (`mmgetstate -aLs`) on all the nodes which have been successfully upgraded
 * Recovery Groups are balanced and filesystems are mounted (`mmlsrecoverygroup`)
-* Filesystem managers are "distributed" (a best practice, if you have more than one filesystem; `mmlsmgr`)
+* Filesystem managers are "distributed" (a best practice, if you have more than one filesystem; `mmlsmgr`) or at least the way they were before the upgrade
 
 ## Update the enclosure and drive firmware
 
