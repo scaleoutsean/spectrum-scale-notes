@@ -150,22 +150,23 @@ We expect to see something like this:
  rg_gssio2                     3       9  gssio2.gpfs.net,gssio1.gpfs.net
 ```
 
-Again, we need to demote the "current node" (now the current is `gssio1` to Secondary role, so let's revert the order for the group owned by `gssio1`:
+Again, we need to demote the "current node" (now `$CURRENT_IO_NODE` is `gssio1`) to Secondary role, so let's revert the server order for the group owned by `gssio1`:
 
 ```
 mmchrecoverygroup rg_gssio1 --servers gssio2,gssio1
 ```
 
-Later when we move on to `gssio2`, we'd do the opposite. And when we are done with this section, we need to revert the role back to the default we had when we first executed `mmlsrecoverygroup` above.
-Again, we should do not simply copy and paste without paying attention to RG and server names. Even in that case nothing catastrophic should happen, but unnecessary failovers with more performance impact are possible.
+This will take a minute.
+
+Later, when we move on to `gssio2`, we'll do the opposite (remove `gssio2` from Primary in all filesystems). And when we are done with this section, we need to revert the role back to the default we had when we first executed `mmlsrecoverygroup` above.
+Again, we should do not simply copy and paste without paying attention to RG and server names. Even in that case nothing catastrophic should happen, but longer I/O server failovers with more performance impact could be possible.
 
 Starting with Step 3 in this section, the procedure is almost identical to `ems1`, but remember to use the correct I/O server name!
 
-Follow Steps 3 to 7 in this section while paying attention to improvement suggestions and workarounds outlined above for `ems1`.
+Follow Steps 3 to 7 in this section while paying attention to our suggestions and workarounds outlined above for `ems1`.
 For example, we suggest to not only shutdown, but also disable GPFS service on the nodes, etc.
 
-This can be beneficial in Step 8 (`mmchfirmware --type host-adapter`), for example, because Step 8 **won't work** if GPFS service is running on the node, and it will be running if you didn't disable it and have rebooted in Step 7.
-(Normally GPFS service is set to autostart (`autoload=yes`).)
+This can be beneficial in Step 8 (`mmchfirmware --type host-adapter`), for example, because Step 8 **won't work** if GPFS service is running on the node, and it will be running if you didn't disable it and rebooted as instructed in the official guide's Step 7. (Normally GPFS service is set to autostart (`autoload=yes`).)
 
 NOTE: Unlike with `ems1`, for I/O nodes only `gssupg400.sh -s $CURRENT_IO_SERVER` needs to be executed in this section.
 
