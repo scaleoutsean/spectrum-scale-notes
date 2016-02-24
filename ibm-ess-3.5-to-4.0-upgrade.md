@@ -8,7 +8,7 @@ They are mere technical notes. If in doubt, contact IBM Support or seek advice o
 
 ## Overview of the Procedure
 
-We'll follow the section *Upgrading from ESS 3.x.y* that begins on page 5 of this document. The procedure has three steps
+We'll follow the section *Upgrading from ESS 3.x.y* that begins on page 5 of this document. The procedure has three main and several follow-up steps:
 
 * Upgrade the Management Node (commonly named `ems1`; we'll use the "default" hostnames in this note)
 * Upgrade all I/O nodes (`gss[1,2]` in each I/O pair)
@@ -81,7 +81,7 @@ NOTES:
 * The manual contains a mistake here - it suggests that the `mmlsfirmware` command should be executed against `gss_ppc64`, which is wrong.
 `gss_ppc64` is a node class (see output of `mmlsnodeclass`) and denotes all ESS I/O nodes (in our case, `gssio1` and `gssio2`, while `ems1` does not belong to this class).
 * When you move on to repeat this upgrade procedure on the I/O nodes, you could use `gss_ppc64` to refer to the both of them, or individual host names (which is going to run slightly faster and may be better since you will be upgrading them in a rolling fashion anyway).
-* If the file /usr/lpp/mmfs/updates/gnrFirmware.tar.untarred exist from a previous upgrade, the gss_ipraid update might fail with message about "FW rpm not found, trying to untar Firmware.tar FW rpm not found. Exiting...". If that happens, remove the /usr/lpp/mmfs/updates/gnrFirmware.tar.untarred and re-run the updatenode command.
+* If the file `/usr/lpp/mmfs/updates/gnrFirmware.tar.untarred` exist from a previous upgrade, the `gss_ipraid` update might fail with message about "FW rpm not found, trying to untar Firmware.tar FW rpm not found. Exiting...". If that happens, remove the `/usr/lpp/mmfs/updates/gnrFirmware.tar.untarred` and re-run the updatenode command for gss_ipraid.
 
 Assuming everything goes well, we can reboot `ems1`, enable GPFS on it and start service: 
 
@@ -92,7 +92,7 @@ mmstartup -N ems1
 
 You can verify new RPMs have been installed (`rpm -qa | grep gpfs`, for example), but we assume that we wouldn't continue if any of the major steps had serious errors.
 
-## Upgrade all I/O nodes (`gss[1,2]` in the first I/O pair)
+## Upgrade all I/O nodes (`gssio[1,2]` in the first I/O pair)
 
 We need to repeat this procedure (upgrade I/O nodes) twice: once on `gssio1` and once on `gssio2`. This can't be executed in parallel, because we need at least one of the nodes to serve data.
 This section has 11 steps and we'll first execute steps 1 to 11 on `gssio1`, and then on `gssio2`.
