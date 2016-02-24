@@ -27,7 +27,8 @@ The node upgrade and OFED upgrade command can take 10-15 minutes to run.
 
 ## Upgrade the Management Node
 
-We first want to upgrade the management node, `ems1`, as described on page 5 of the Guide.
+We first want to upgrade the management node, `ems1`, as described on page 5 of the Guide. 
+If you're not sure what your hostnames are, run `mmlsnodeclass` and they will be displayed in the output. You can pass IP addresses or hostnames to `-N` (node) parameter.
 
 ```
 cd /opt/ibm/gss/install
