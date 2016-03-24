@@ -3,6 +3,7 @@
 ## List of Notes in This Repository
 
 * [IBM Elastic Storage Server 3.5 to 4.0 Upgrade Notes](https://github.com/scaleoutsean/spectrum-scale-notes/blob/master/ibm-ess-3.5-to-4.0-upgrade.md)
+* [Configure Spectrum Scale with TrendMicro Server Protect for Linux on CentOS 7](https://ibm.box.com/s/bp23zod3ojyyd94eazwqkm5wb2f1hi9w) (note that as of now no official support for this combination)
 
 ## Other Spectrum Scale Resources on Github.com
 
